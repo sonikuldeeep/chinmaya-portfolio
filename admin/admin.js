@@ -1004,7 +1004,11 @@
     return repo;
   }
   const blobBase64 = async (blob) => (await blobToDataUrl(blob)).split(',')[1];
-  const liveUrl = (c) => (c.repo.toLowerCase() === `${c.owner.toLowerCase()}.github.io` ? `https://${c.owner}.github.io/` : `https://${c.owner}.github.io/${c.repo}/`);
+  // Where visitors see the site: the current address when hosted (Vercel, custom domain, …), else GitHub Pages.
+  const liveUrl = (c) => {
+    if (isRemoteHost()) return `${location.origin}${location.pathname.replace(/[^/]*$/, '')}`;
+    return c.repo.toLowerCase() === `${c.owner.toLowerCase()}.github.io` ? `https://${c.owner}.github.io/` : `https://${c.owner}.github.io/${c.repo}/`;
+  };
 
   async function publishToGitHub() {
     const c = gh.load();
@@ -1047,7 +1051,7 @@
       });
       ghBaseSha = html.sha;
       markClean('Published');
-      toast(`Published. Everyone will see the changes at ${liveUrl(c)} in about a minute.`, 'success');
+      toast(`Published. Everyone will see the changes at ${liveUrl(c)} within about a minute (once the site has redeployed).`, 'success');
     } catch (err) {
       ui.status.textContent = 'Publish failed';
       toast(`Publish failed: ${err.message}`, 'error');

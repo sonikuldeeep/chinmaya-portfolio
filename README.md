@@ -30,6 +30,16 @@ chinmaya-portfolio/
 └── README.md
 ```
 
+## Hosting on Vercel
+
+The site is plain static files, so Vercel needs no build step (`vercel.json` only sets cache headers).
+
+1. Push this folder to a GitHub repository.
+2. On vercel.com, choose **Add New → Project → Import** that repository. Set Framework Preset to **Other**, leave the build command empty, then click **Deploy**.
+3. Connect the admin to the same repository: **Admin → Settings → Publish to the live site**. Enter owner, repository, `main` and a fine-grained token with *Contents: Read and write*.
+
+After that, **Publish** in the admin commits to GitHub, Vercel redeploys automatically (usually under a minute), and every visitor sees the change.
+
 ## Going live: GitHub Pages + publishing from the admin
 
 The site is hosted on **GitHub Pages**. Once the admin is connected to the repository, **Publish** commits your changes, and every visitor sees them about a minute later. Pages can cache for up to about 10 minutes, so press Ctrl+F5 if you don't see an update yet.
