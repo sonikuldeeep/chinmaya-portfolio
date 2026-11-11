@@ -1,0 +1,8 @@
+# Local backups written by the admin editor's "Save to this computer"
+admin/backups/
+
+# OS / editor clutter
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
