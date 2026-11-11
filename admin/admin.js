@@ -940,8 +940,10 @@
       try { cfg = JSON.parse(localStorage.getItem(GH_KEY) || '{}'); } catch (_) { /* ignore */ }
       let token = cfg.token || '';
       if (!token) { try { token = sessionStorage.getItem(`${GH_KEY}-token`) || ''; } catch (_) { /* ignore */ } }
+      // Defaults come from <meta name="admin-repo" content="owner/repo@branch"> in index.html.
+      const preset = ($('meta[name="admin-repo"]')?.getAttribute('content') || '').match(/^([^/\s]+)\/([^@\s]+)(?:@(\S+))?$/) || [];
       const guess = gh.guess();
-      return { owner: cfg.owner || guess.owner || '', repo: cfg.repo || guess.repo || '', branch: cfg.branch || 'main', dir: cfg.dir || '', token, remember: !!cfg.token, saved: !!cfg.owner };
+      return { owner: cfg.owner || preset[1] || guess.owner || '', repo: cfg.repo || preset[2] || guess.repo || '', branch: cfg.branch || preset[3] || 'main', dir: cfg.dir || '', token, remember: !!cfg.token, saved: !!cfg.owner };
     },
     store({ owner, repo, branch, dir, token, remember }) {
       try {
@@ -1160,7 +1162,7 @@
             with access to <em>only this repository</em> and the permission <em>Contents: Read and write</em>.</p>
           <div class="adm-grid">
             <label class="adm-field"><span>GitHub owner</span><input name="ghOwner" value="${esc(ghc.owner)}" placeholder="your-username" autocomplete="off"></label>
-            <label class="adm-field"><span>Repository</span><input name="ghRepo" value="${esc(ghc.repo)}" placeholder="chinmaya-portfolio" autocomplete="off"></label>
+            <label class="adm-field"><span>Repository</span><input name="ghRepo" value="${esc(ghc.repo)}" placeholder="repository-name" autocomplete="off"></label>
             <label class="adm-field"><span>Branch</span><input name="ghBranch" value="${esc(ghc.branch)}" placeholder="main" autocomplete="off"></label>
             <label class="adm-field"><span>Site folder in repo (usually empty)</span><input name="ghDir" value="${esc(ghc.dir)}" placeholder="(repository root)" autocomplete="off"></label>
           </div>
